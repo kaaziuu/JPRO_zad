@@ -6,6 +6,6 @@ public:
 	int x_start;
 	int y_start;
 	int size;
-	Room();
+	void init(int, int);
 };
 

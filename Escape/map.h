@@ -2,6 +2,7 @@
 
 #include "Player.h"
 #include "Enemy.h"
+#include "Room.h"
 class Map
 {
 public:
@@ -12,10 +13,10 @@ public:
 	char map[20][40];
 	int room_corner[4][3];
 	char is_room_wall(int x, int y);
-	void room_generator();
 private:
 	int width;
 	int height;
+	Room room[4];
 	void room_generator();
 };
 

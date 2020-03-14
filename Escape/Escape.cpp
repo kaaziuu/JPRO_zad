@@ -21,12 +21,6 @@ void level(Player& hero) {
     Enemy enemy_arr[size];
     int x_pos[size];
     int y_pos[size];
-    int corner_room[3][2];
-    // room generation
-    for (int i = 0; i < 3; i++) {
-        
-    }
-
     
     // enemy postion genarton
     for (int i = 0; i < size; i++) {
@@ -37,9 +31,6 @@ void level(Player& hero) {
             continue;
         }
         enemy_arr[i].init(x, y);
-    }
-    for (int i = 0; i < size; i++) {
-        std::cout << "x " << enemy_arr[i].x_pos << " y " << enemy_arr[i].y_pos << std::endl;
     }
 
     Map map(40, 20, hero, enemy_arr, size);

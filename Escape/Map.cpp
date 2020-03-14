@@ -1,44 +1,65 @@
 #include "Map.h"
 
-void Map::room_generator() {
-	int max_x = 5;
-	int max_y = 5;
-	int start_x = 0;
-	int start_y = 0;
+void Map::room_generator()
+{
 	for (int i = 0; i < 4; i++) {
-		start_x = (i % 2) * 10;
-		start_y = (i / 2) * 10;
-		int x = (rand() % max_x)+start_x;
-		int y = (rand() % max_y)+start_y;
-		if (x == 1 && y == 1) {
-			x++;
-		}
-		int size = (rand() & 3)+3;
-		this->room_corner[i][0] = x;
-		this->room_corner[i][1] = y;
-		this->room_corner[i][2] = size;
+		int start_x = (i % 2) * 20;
+		int start_y = (i / 2) * 10;
+		this->room[i].init(start_x, start_y);
 	}
 }
 
 char Map::is_room_wall(int x, int y) {
 	for (int i = 0; i < 4; i++) {
-		
+		const int size = room[i].size;
+		const int x_start = room[i].x_start;
+		const int y_start = room[i].y_start;
+		if ((x == x_start || x == x_start + size) && (y >= y_start && y <= y_start + size)) {
+			return '|';
+		}
+		if ((y == y_start || y == y_start + size) && (x > x_start&& x < x_start + size)) {
+			return '/';
+		}
 	}
 	return ' ';
 }
 
+
 Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size) {
 	this->width = width;
 	this->height = height;
-	room_generator();
+	this->room_generator();
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			char obj = is_room_wall(j, i);
-			if (obj != ' ') {
-
+			if (i == 0 || i == this->height - 1) {
+				std::cout << '/';
+			}
+			else if (j == 0 || j == this->width - 1) {
+				std::cout << "|";
+			}
+			else {
+				char ch = is_room_wall(j, i);
+				if (ch != ' ') {
+					std::cout << ch;
+				}
+				else {
+					if (hero.x_pos == j && hero.y_pos == i) {
+						std::cout << hero.look;
+					}
+					else if (int index = enemy_draw(enemy_arr, size, j, i) != -1) {
+						std::cout << enemy_arr[index].look;
+					}
+					else {
+						std::cout << " ";
+					}
+				}
 			}
 		}
+		std::cout << std::endl;
+
 	}
+	hero.stats();
 }
 
 int Map::enemy_draw(Enemy* enemy_arr, int size, int x, int y) {
