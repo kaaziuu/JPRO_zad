@@ -1,0 +1,4 @@
+﻿  Escape.cpp
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\map.h(1,9): warning C4068: nieznana pragma
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(21,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+  Escape.vcxproj -> C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Debug\Escape.exe
