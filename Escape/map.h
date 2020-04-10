@@ -13,6 +13,7 @@ public:
 	char map[20][40];
 	int room_corner[4][3];
 	char room_wall(int x, int y, bool* used_index);
+	void move_player(Player&, int);
 private:
 	int width;
 	int height;

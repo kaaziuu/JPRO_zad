@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Game_item.h"
 #include "Person.h"
+//#include "map.h"
+
 class Player : public Person
 {
 public:
@@ -10,6 +12,7 @@ public:
     Player(int, int);
     const int max_back = 4;
     const char look = '#';
+    bool is_fight = false;
     void stats();
 };
 

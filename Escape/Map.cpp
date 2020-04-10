@@ -60,9 +60,13 @@ void Map::update(Player& hero, Enemy* enemy_arr, int size) {
 	for (int i = 0; i < this->height; i++) {
 		for (int j = 0; j < this->width; j++) {
 			char ch = room_wall(j, i, used_index);
+			int index = enemy_draw(enemy_arr, size, j, i);
 		
 			if (ch == 'd') {
 				this->map[i][j] = 'd';
+				if (index != -1) {
+					enemy_arr[index].is_hidden = true;
+				}
 				continue;
 			}
 			if (i == 0 || i == this->height - 1) {
@@ -74,12 +78,15 @@ void Map::update(Player& hero, Enemy* enemy_arr, int size) {
 			else {
 				if (ch != ' ') {
 					this->map[i][j] = ch;
+					if (index != -1) {
+						enemy_arr[index].is_hidden = true;
+					}
 				}
 				else {
 					if (hero.x_pos == j && hero.y_pos == i) {
 						this->map[i][j] = hero.look;
 					}
-					else if (int index = enemy_draw(enemy_arr, size, j, i) != -1) {
+					else if (index != -1) {
 						this->map[i][j] = enemy_arr[index].look;
 					}
 					else {
@@ -102,5 +109,36 @@ void Map::draw() {
 		}
 		std::cout << std::endl;
 	}
+}
+
+void Map::move_player(Player& hero, int direction) {
+	int y = hero.y_pos;
+	int x = hero.x_pos;
+
+	if (direction == 0) {
+		char target = this->map[y - 1][x];
+		if (target == ' ') {
+			hero.y_pos--;
+		}
+	}
+	else if (direction == 1) {
+		char target = this->map[y + 1][x];
+		if (target == ' ') {
+			hero.y_pos++;
+		}
+	}
+	else if (direction == 2) {
+		char target = this->map[y][x + 1];
+		if (target == ' ') {
+			hero.x_pos++;
+		}
+	}
+	else if (direction == 3) {
+		char target = this->map[y][x - 1];
+		if (target == ' ') {
+			hero.x_pos--;
+		}
+	}
+
 }
 
