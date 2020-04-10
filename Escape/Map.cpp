@@ -117,25 +117,25 @@ void Map::move_player(Player& hero, int direction) {
 
 	if (direction == 0) {
 		char target = this->map[y - 1][x];
-		if (target == ' ') {
+		if (target == ' ' || target == 'd') {
 			hero.y_pos--;
 		}
 	}
 	else if (direction == 1) {
 		char target = this->map[y + 1][x];
-		if (target == ' ') {
+		if (target == ' ' || target == 'd') {
 			hero.y_pos++;
 		}
 	}
 	else if (direction == 2) {
 		char target = this->map[y][x + 1];
-		if (target == ' ') {
+		if (target == ' ' || target == 'd') {
 			hero.x_pos++;
 		}
 	}
 	else if (direction == 3) {
 		char target = this->map[y][x - 1];
-		if (target == ' ') {
+		if (target == ' '|| target=='d') {
 			hero.x_pos--;
 		}
 	}

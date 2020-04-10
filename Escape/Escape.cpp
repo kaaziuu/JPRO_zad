@@ -74,7 +74,7 @@ void main_loop(Player& hero, Map& map) {
         old_time = current_time;
         current_time = time(NULL);
         delta_time += current_time - old_time;
-        if (delta_time > time_deley){ 
+        if (delta_time > time_deley && !hero.is_fight){ 
             delta_time = 0;
             // player movment
             if (GetAsyncKeyState(VK_UP)) {
