@@ -12,7 +12,7 @@ public:
 	int enemy_draw(Enemy*, int, int, int);
 	char map[20][40];
 	int room_corner[4][3];
-	char is_room_wall(int x, int y);
+	char room_wall(int x, int y, bool* used_index);
 private:
 	int width;
 	int height;

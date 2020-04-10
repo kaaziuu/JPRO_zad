@@ -35,15 +35,16 @@ Player::Player(int x, int y) {
 }
 
 void Player::stats() {
-    std::cout << "zdrowi: " << this->health << std::endl;
-    std::cout << "sila: " << this->power << std::endl;
-    std::cout << "obrona: " << this->defense << std::endl;
+
+    std::cout << "\t\t\tzdrowi: " << this->health << std::endl;
+    std::cout << "\t\t\tsila: " << this->power << std::endl;
+    std::cout << "\t\t\tobrona: " << this->defense << std::endl;
     for (int i=0; i < this->max_back; i++) {
         if (this->back[i].name != "") {
-            std::cout << "slot " << (i + 1) << this->back[i].name << std::endl;
+            std::cout << "\t\t\tslot " << (i + 1) << this->back[i].name << std::endl;
         }
         else {
-            std::cout << "slot " << (i + 1) << " pusty " << std::endl;
+            std::cout << "\t\t\tslot " << (i + 1) << " pusty " << std::endl;
         }
     }
 }
