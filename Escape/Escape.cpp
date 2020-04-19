@@ -61,11 +61,39 @@ Map level(Player& hero) {
     return map;
 }
 
+void player_movment(Map& map, Player& hero) {
+    if (GetAsyncKeyState(VK_UP)) {
+        map.move_player(hero, 0);
+    }
+    else if (GetAsyncKeyState(VK_DOWN)) {
+        map.move_player(hero, 1);
+
+    }
+    else if (GetAsyncKeyState(VK_RIGHT)) {
+        map.move_player(hero, 2);
+
+    }
+    else if (GetAsyncKeyState(VK_LEFT)) {
+        map.move_player(hero, 3);
+
+    }
+}
+
+void enemy_logic(char map[20][40], Player& hero) {
+    for (int i = 0; i < size; i++) {
+       
+        int player_pos[2] = { hero.x_pos, hero.y_pos };
+        if (!enemy_arr[i].is_hidden) {
+            enemy_arr[i].update(map, player_pos);
+        }
+    }
+}
+
 
 // main loop
 void main_loop(Player& hero, Map& map) {
     bool is_play = true;
-    float time_deley = 0.3;
+    float time_deley = 0.2;
     float delta_time=2000;
     time_t old_time= 0;
     time_t current_time = 0;
@@ -77,24 +105,12 @@ void main_loop(Player& hero, Map& map) {
         if (delta_time > time_deley && !hero.is_fight){ 
             delta_time = 0;
             // player movment
-            if (GetAsyncKeyState(VK_UP)) {
-                map.move_player(hero, 0);
-            }
-            else if (GetAsyncKeyState(VK_DOWN)) {
-                map.move_player(hero, 1);
-
-            }
-            else if (GetAsyncKeyState(VK_RIGHT)) {
-                map.move_player(hero, 2);
-
-            }
-            else if (GetAsyncKeyState(VK_LEFT)) {
-                map.move_player(hero, 3);
-
-            }
-
+            player_movment(map, hero);
+            enemy_logic(map.map, hero);
             map.update(hero, enemy_arr, size);
+            
         }
+
     }
 }
 

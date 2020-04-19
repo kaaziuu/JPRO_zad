@@ -135,7 +135,7 @@ void Map::move_player(Player& hero, int direction) {
 	}
 	else if (direction == 3) {
 		char target = this->map[y][x - 1];
-		if (target == ' '|| target=='d') {
+		if (target == ' '|| target=='d' ) {
 			hero.x_pos--;
 		}
 	}
