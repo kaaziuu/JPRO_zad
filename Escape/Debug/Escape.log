@@ -3,5 +3,5 @@ C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Enemy.cpp(67,41): 
 C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Enemy.cpp(67,41): warning C4244: "inicjowanie": konwersja z "int" do "float", możliwa utrata danych
 C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Enemy.cpp(67,70): warning C4838: konwersja z „int” do „float” wymaga konwersji zawężającej
 C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Enemy.cpp(67,70): warning C4244: "inicjowanie": konwersja z "int" do "float", możliwa utrata danych
-C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Enemy.cpp(85,13): warning C4553: „==”: Wynik wyrażenia nie jest używany; czy chodziło Ci o „=”?
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Enemy.cpp(78,13): warning C4553: „==”: Wynik wyrażenia nie jest używany; czy chodziło Ci o „=”?
   Escape.vcxproj -> C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Debug\Escape.exe

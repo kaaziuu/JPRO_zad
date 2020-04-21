@@ -68,13 +68,6 @@ void Enemy::update(char map[20][40], int player_pos[]) {
 	float distanse = sqrtf(powf(target_vector[0], 2) + powf(target_vector[1], 2));
 	bool is_wall = false;
 
-	/*
-		#   |
-			
-			 o
-
-	
-	*/
 	if(range_see < distanse){
 		int x = this->x_pos;
 		int y = this->y_pos;
@@ -96,11 +89,15 @@ void Enemy::update(char map[20][40], int player_pos[]) {
 
 	if (distanse <= this->range_see && this->current_state==patrol && !is_wall) {
 		this->look = 'x';
-		current_state = attact;
+		this->current_state = attact;
 	}
 	else if (distanse > this->range_see&& this->current_state == attact) {
 		this->look = 'o';
 		this->current_state = patrol;
+	}
+
+	if (this->current_state == patrol) {
+		this->patrol_state(map);
 	}
 
 	
