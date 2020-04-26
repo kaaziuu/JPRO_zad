@@ -14,15 +14,18 @@ enum state
 class Enemy : public Person {
 public:
 
-	void init(int, int);
-	//o-nie widzi nas, x-atakuje nas, m-martewy
+	void init(int, int, int);
+	//o-nie widzi nas, x-atakuje nas, m-martewy, X-focus
 	char look = 'o';
+	int id;
 	bool is_hidden = false;
+	bool is_focus = false;
 	state current_state = patrol;
-	void update(char map[20][40], int player_pos[]);
+	bool update(char map[20][40], int player_pos[]);
 	void patrol_state(char map[20][40]);
 	void attact_state(char map[20][40], int player_pos[2]);
 
 protected:
-	int range_see = 3;
+	int range_see = 4;
+	int move_point;
 };

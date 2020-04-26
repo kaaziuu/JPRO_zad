@@ -7,8 +7,8 @@ class Map
 {
 public:
 	Map(int, int, Player&, Enemy*, int size);
-	void draw();
-	void update(Player&, Enemy*, int);
+	void draw(Enemy&, bool);
+	void update(Player&, Enemy*, int size);
 	int enemy_draw(Enemy*, int, int, int);
 	char map[20][40];
 	int room_corner[4][3];

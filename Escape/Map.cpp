@@ -51,12 +51,14 @@ int Map::enemy_draw(Enemy* enemy_arr, int size, int x, int y) {
 			return i;
 		}
 	}
-
 	return -1;
+	
 }
 
 void Map::update(Player& hero, Enemy* enemy_arr, int size) {
-	bool used_index[4] = {false, false, false, false};
+	bool used_index[4] = { false, false, false, false }; 
+	Enemy focus;
+	bool is_focus = false;
 	for (int i = 0; i < this->height; i++) {
 		for (int j = 0; j < this->width; j++) {
 			char ch = room_wall(j, i, used_index);
@@ -87,7 +89,12 @@ void Map::update(Player& hero, Enemy* enemy_arr, int size) {
 						this->map[i][j] = hero.look;
 					}
 					else if (index != -1) {
+						
 						this->map[i][j] = enemy_arr[index].look;
+						if (enemy_arr[index].is_focus) {
+							focus = enemy_arr[index];
+							is_focus = true;
+						}
 					}
 					else {
 						this->map[i][j] = ' ';
@@ -96,25 +103,38 @@ void Map::update(Player& hero, Enemy* enemy_arr, int size) {
 			}
 		}
 	}
-	draw();
+	draw(focus, is_focus);
 	hero.stats();
 }
 
-void Map::draw() {
+// metoda odpowiedzalna za rysowanie mapy
+void Map::draw(Enemy& fcs, bool is_focus) {
+	
 	system("cls");
 	for (int i = 0; i < this->height; i++) {
 		std::cout << "\t\t\t";
 		for (int j = 0; j < this->width; j++) {
 			std::cout << this->map[i][j];
+			
+			
+		}
+		if (is_focus && i < 5) {
+			std::cout << "\t\t";
+			if (i == 0) std::cout << "Przeciwnik ";
+			if (i == 1) std::cout << "ID: " << fcs.id;
+			if (i == 2) std::cout << "Zdrowie: " << fcs.health;
+			if (i == 3) std::cout << "sila: " << fcs.power;
+			if (i == 4) std::cout << "obrona: " << fcs.defense;
 		}
 		std::cout << std::endl;
 	}
 }
 
+
+// metoda odpowiedzialna za poruszanie sie gracza
 void Map::move_player(Player& hero, int direction) {
 	int y = hero.y_pos;
 	int x = hero.x_pos;
-
 	if (direction == 0) {
 		char target = this->map[y - 1][x];
 		if (target == ' ' || target == 'd') {

@@ -38,7 +38,7 @@ void generate_enemy() {
             i--;
             continue;
         }
-        enemy_arr[i].init(x, y);
+        enemy_arr[i].init(x, y, i);
     }
 }
 
@@ -54,7 +54,7 @@ Map level(Player& hero) {
             i--;
             continue;
         }
-        enemy_arr[i].init(x, y);
+        enemy_arr[i].init(x, y, i);
     }
 
     Map map(40, 20, hero, enemy_arr, size);
@@ -77,16 +77,48 @@ void player_movment(Map& map, Player& hero) {
         map.move_player(hero, 3);
 
     }
+
+
+}
+
+void player_fight(Map& map, Player& player, int* onfocus) {
+    if (GetAsyncKeyState(VK_TAB)) {
+        if (player.is_fight) {
+            int i = (*onfocus) + 1;
+            while (i != *onfocus)
+            {
+                if (enemy_arr[i].current_state == attact) {
+                    enemy_arr[*onfocus].is_focus = false;
+                    *onfocus = i;
+                    enemy_arr[i].is_focus = true;
+                    break;
+
+                }
+                i++;
+                if (i >= size) {
+                    i = 0;
+                }
+
+            }
+        }
+    }
 }
 
 void enemy_logic(char map[20][40], Player& hero) {
+    int player_pos[2] = { hero.x_pos, hero.y_pos };
+    bool to_fight = false;
+    int counter = 0;
     for (int i = 0; i < size; i++) {
-       
-        int player_pos[2] = { hero.x_pos, hero.y_pos };
+
         if (!enemy_arr[i].is_hidden) {
-            enemy_arr[i].update(map, player_pos);
+            bool tmp = enemy_arr[i].update(map, player_pos);
+            if (!to_fight && tmp != to_fight)
+                to_fight = tmp;
+            if (tmp) counter++;
+        
         }
     }
+    hero.is_fight = to_fight;
 }
 
 
@@ -95,6 +127,9 @@ void main_loop(Player& hero, Map& map) {
     bool is_play = true;
     float time_deley = 0.2;
     float delta_time=2000;
+    int* pointer_onfocus;
+    int onfocus = -1;
+    pointer_onfocus = &onfocus;
     time_t old_time= 0;
     time_t current_time = 0;
     while (is_play)
@@ -103,13 +138,36 @@ void main_loop(Player& hero, Map& map) {
         current_time = time(NULL);
         delta_time += current_time - old_time;
         if (delta_time > time_deley && !hero.is_fight){ 
+            /*if (onfocus != -1) {
+                enemy_arr[onfocus].is_focus = false;
+            }*/
             delta_time = 0;
             // player movment
             player_movment(map, hero);
             enemy_logic(map.map, hero);
             map.update(hero, enemy_arr, size);
-            
         }
+        // fight mode
+        else if (delta_time > time_deley && hero.is_fight) {
+            if (*pointer_onfocus == -1) {
+                for (int i = 0; i < size; i++) {
+                    if (enemy_arr[i].current_state = attact) {
+                        *pointer_onfocus = i;
+                        enemy_arr[i].is_focus = true;
+                        break;
+                    }
+                }
+            }
+            delta_time = 0;
+            player_movment(map, hero);
+            player_fight(map, hero, pointer_onfocus);
+            enemy_logic(map.map, hero);
+
+            map.update(hero, enemy_arr, size);
+
+
+        }
+        
 
     }
 }

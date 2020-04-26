@@ -11,6 +11,9 @@ void Room::init(int start_x, int start_y) {
 	if (x == 1 && y == 1) {
 		x++;
 	}
+	if (x < 1 && y == 1) {
+		y++;
+	}
 	int size = (rand() % 3) +4;
 	this->x_start = x;
 	this->y_start = y;

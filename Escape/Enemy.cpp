@@ -1,8 +1,13 @@
 #include "Enemy.h"
 
-void Enemy::init(int x, int y) {
+void Enemy::init(int x, int y, int id) {
 	this->x_pos = x;
 	this->y_pos = y;
+	this->id = id;
+	this->is_focus = false;
+	this->health = 5;
+	this->power = 2;
+	this->defense = 1;
 }
 
 // patrol state
@@ -59,8 +64,8 @@ void Enemy::attact_state(char map[20][40], int player_pos[2]) {
 	std::cout << "enemy attact mode";
 }
 
-void Enemy::update(char map[20][40], int player_pos[]) {
-	std::cout << player_pos[0];
+bool Enemy::update(char map[20][40], int player_pos[]) {
+	//std::cout << player_pos[0];
 	//int x_check = player_pos[0];
 	//std::cout << std::endl  << x_check;
 
@@ -68,27 +73,31 @@ void Enemy::update(char map[20][40], int player_pos[]) {
 	float distanse = sqrtf(powf(target_vector[0], 2) + powf(target_vector[1], 2));
 	bool is_wall = false;
 
-	if(range_see < distanse){
+	if(this->range_see >= distanse){
 		int x = this->x_pos;
 		int y = this->y_pos;
-		while (x  != player_pos[0] && y != player_pos[1])
+		while (x  != player_pos[0] || y != player_pos[1])
 		{
 			char check_point = map[y][x];
 			if (check_point == 'd' || check_point == '|' || check_point == '/') {
-				is_wall == true;
+				is_wall = true;
 				break;
 			}
 			if (x != player_pos[0]) {
-				(x > player_pos[0]) ? x-- : x++;
+				if (x > player_pos[0]){ x--; }
+				else { x++; }
 			}
 			if (y != player_pos[1]) {
-				(y > player_pos[1]) ? y-- : y++;
+				if (y > player_pos[1]) { y--; }
+				else { y++; }
 			}
 		}
+		int tmp = 2;
 	}
 
 	if (distanse <= this->range_see && this->current_state==patrol && !is_wall) {
-		this->look = 'x';
+		if (this->is_focus)this->look = 'X';
+		else this->look = 'x';
 		this->current_state = attact;
 	}
 	else if (distanse > this->range_see&& this->current_state == attact) {
@@ -98,9 +107,14 @@ void Enemy::update(char map[20][40], int player_pos[]) {
 
 	if (this->current_state == patrol) {
 		this->patrol_state(map);
+		return false;
 	}
+	else if (this->current_state == attact) {
+		if (this->is_focus)this->look = 'X';
+		else this->look = 'x';
+	}
+	else return true;
 
-	
 
 }
 
