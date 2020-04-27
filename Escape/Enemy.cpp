@@ -65,9 +65,10 @@ void Enemy::attact_state(char map[20][40], int player_pos[2]) {
 }
 
 bool Enemy::update(char map[20][40], int player_pos[]) {
-	//std::cout << player_pos[0];
-	//int x_check = player_pos[0];
-	//std::cout << std::endl  << x_check;
+	if (this->current_state == dead) {
+		this->look = 'm';
+		return false;
+	}
 
 	float target_vector[2] = { this->x_pos - player_pos[0], this->y_pos - player_pos[1] };
 	float distanse = sqrtf(powf(target_vector[0], 2) + powf(target_vector[1], 2));

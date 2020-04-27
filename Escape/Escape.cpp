@@ -102,6 +102,27 @@ void player_fight(Map& map, Player& player, int* onfocus) {
             }
         }
     }
+    if (GetAsyncKeyState(VK_LCONTROL)) {
+        player.attack(enemy_arr[*onfocus], map.map);
+    }
+    else if (GetAsyncKeyState(VK_UP)) {
+        map.move_player(player, 0);
+        player.current_point--;
+    }
+    else if (GetAsyncKeyState(VK_DOWN)) {
+        map.move_player(player, 1);
+        player.current_point--;
+    }
+    else if (GetAsyncKeyState(VK_RIGHT)) {
+        map.move_player(player, 2);
+        player.current_point--;
+
+    }
+    else if (GetAsyncKeyState(VK_LEFT)) {
+        map.move_player(player, 3);
+        player.current_point--;
+
+    }
 }
 
 void enemy_logic(char map[20][40], Player& hero) {
@@ -110,7 +131,7 @@ void enemy_logic(char map[20][40], Player& hero) {
     int counter = 0;
     for (int i = 0; i < size; i++) {
 
-        if (!enemy_arr[i].is_hidden) {
+        if (!enemy_arr[i].is_hidden && enemy_arr[i].current_state != dead) {
             bool tmp = enemy_arr[i].update(map, player_pos);
             if (!to_fight && tmp != to_fight)
                 to_fight = tmp;
@@ -138,9 +159,14 @@ void main_loop(Player& hero, Map& map) {
         current_time = time(NULL);
         delta_time += current_time - old_time;
         if (delta_time > time_deley && !hero.is_fight){ 
-            /*if (onfocus != -1) {
+            if (*pointer_onfocus != -1) {
                 enemy_arr[onfocus].is_focus = false;
-            }*/
+                *pointer_onfocus = -1;
+                if (hero.move_point != hero.current_point) {
+                    hero.current_point = hero.move_point;
+                }
+            }
+        
             delta_time = 0;
             // player movment
             player_movment(map, hero);
@@ -159,10 +185,23 @@ void main_loop(Player& hero, Map& map) {
                 }
             }
             delta_time = 0;
-            player_movment(map, hero);
-            player_fight(map, hero, pointer_onfocus);
+            //player_movment(map, hero);
+            if (map.is_player_move) {
+                player_fight(map, hero, pointer_onfocus);
+                if (hero.current_point == 0) {
+                    map.is_player_move = false;
+                    hero.current_point = 3;
+                }
+            }
+            else {
+                int player_pos[2] = { hero.x_pos, hero.y_pos };
+                for (int i = 0; i < size; i++) {
+                    if (enemy_arr[i].current_state == attact) {
+                        enemy_arr[i].attact_state(map.map, player_pos);
+                    }
+                }
+            }
             enemy_logic(map.map, hero);
-
             map.update(hero, enemy_arr, size);
 
 

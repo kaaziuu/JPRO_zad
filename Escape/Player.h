@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Game_item.h"
 #include "Person.h"
+#include "Enemy.h"
 //#include "map.h"
 
 class Player : public Person
@@ -14,5 +15,6 @@ public:
     const char look = '#';
     bool is_fight = false;
     void stats();
+    void attack(Enemy& to_attack, char map[20][40]);
 };
 

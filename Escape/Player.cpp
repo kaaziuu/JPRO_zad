@@ -39,6 +39,7 @@ void Player::stats() {
     std::cout << "\t\t\tzdrowi: " << this->health << std::endl;
     std::cout << "\t\t\tsila: " << this->power << std::endl;
     std::cout << "\t\t\tobrona: " << this->defense << std::endl;
+    std::cout << "\t\t\tmove_point: " << this->current_point << std::endl;
     for (int i=0; i < this->max_back; i++) {
         if (this->back[i].name != "") {
             std::cout << "\t\t\tslot " << (i + 1) << this->back[i].name << std::endl;
@@ -47,6 +48,27 @@ void Player::stats() {
             std::cout << "\t\t\tslot " << (i + 1) << " pusty " << std::endl;
         }
     }
+}
+
+
+void Player::attack(Enemy& to_attack, char Map[20][40]) {
+    int x_enemy = to_attack.x_pos;
+    int y_enemy = to_attack.y_pos;
+    bool can_attack = false;
+    if ((y_enemy == this->y_pos && abs(this->x_pos - x_enemy) == 1) || (this->x_pos == x_enemy && abs(this->y_pos - y_enemy))) {
+        int demage = this->power - to_attack.defense;
+        if (demage <= 0) {
+            demage = 1;
+        }
+        to_attack.health -= demage;
+        this->current_point--;
+        if (to_attack.health <= 0) {
+            to_attack.current_state = dead;
+            to_attack.look = 'm';
+        }
+    }
+
+    
 }
 
 
