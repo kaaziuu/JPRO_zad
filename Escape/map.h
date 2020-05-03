@@ -10,15 +10,16 @@ public:
 	void draw(Enemy&, bool);
 	void update(Player&, Enemy*, int size);
 	int enemy_draw(Enemy*, int, int, int);
-	char map[20][40];
+	char** map;
 	int room_corner[4][3];
 	char room_wall(int x, int y, bool* used_index);
 	void move_player(Player&, int);
 	bool is_player_move = true;
-
-private:
 	int width;
 	int height;
+
+private:
+
 	Room room[4];
 	void room_generator();
 };

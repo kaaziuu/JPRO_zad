@@ -11,7 +11,7 @@ void Enemy::init(int x, int y, int id) {
 }
 
 // patrol state
-void Enemy::patrol_state(char map[20][40]) {
+void Enemy::patrol_state(char **map) {
 	int direct = rand() % 4;
 	int start_direct = direct;
 	//random movment of enemy, enemy alway will be move if one og direct is bloced enemy will be to other
@@ -60,11 +60,11 @@ void Enemy::patrol_state(char map[20][40]) {
 }
 
 // attact state TODO
-void Enemy::attact_state(char map[20][40], int player_pos[2]) {
+void Enemy::attact_state(char **map, int player_pos[2]) {
 	std::cout << "enemy attact mode";
 }
 
-bool Enemy::update(char map[20][40], int player_pos[]) {
+bool Enemy::update(char **map, int player_pos[]) {
 	if (this->current_state == dead) {
 		this->look = 'm';
 		return false;

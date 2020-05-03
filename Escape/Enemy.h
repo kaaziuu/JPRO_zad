@@ -21,9 +21,9 @@ public:
 	bool is_hidden = false;
 	bool is_focus = false;
 	state current_state = patrol;
-	bool update(char map[20][40], int player_pos[]);
-	void patrol_state(char map[20][40]);
-	void attact_state(char map[20][40], int player_pos[2]);
+	bool update(char **map, int player_pos[]);
+	void patrol_state(char **map);
+	void attact_state(char **map, int player_pos[2]);
 
 protected:
 	int range_see = 4;

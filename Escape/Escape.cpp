@@ -125,7 +125,7 @@ void player_fight(Map& map, Player& player, int* onfocus) {
     }
 }
 
-void enemy_logic(char map[20][40], Player& hero) {
+void enemy_logic(char** map, Player& hero) {
     int player_pos[2] = { hero.x_pos, hero.y_pos };
     bool to_fight = false;
     int counter = 0;

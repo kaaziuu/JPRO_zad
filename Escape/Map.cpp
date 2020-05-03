@@ -40,6 +40,21 @@ Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size) {
 	this->width = width;
 	this->height = height;
 	this->room_generator();
+	if (this->height < 20) {
+		this->height = 20;
+	}
+	if (this->width < 40) {
+		this->width = 40;
+	}
+
+	this->map = new char* [this->height];
+	for (int i = 0; i < this->height; i++) {
+		this->map[i] = new char[this->width];
+	}
+	
+	
+	
+
 	update(hero, enemy_arr, size);
 
 }

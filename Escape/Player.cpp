@@ -51,7 +51,7 @@ void Player::stats() {
 }
 
 
-void Player::attack(Enemy& to_attack, char Map[20][40]) {
+void Player::attack(Enemy& to_attack, char **Map) {
     int x_enemy = to_attack.x_pos;
     int y_enemy = to_attack.y_pos;
     bool can_attack = false;

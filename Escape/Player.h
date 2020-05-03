@@ -15,6 +15,6 @@ public:
     const char look = '#';
     bool is_fight = false;
     void stats();
-    void attack(Enemy& to_attack, char map[20][40]);
+    void attack(Enemy& to_attack, char **map);
 };
 
