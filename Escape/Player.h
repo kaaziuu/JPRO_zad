@@ -10,11 +10,13 @@ class Player : public Person
 public:
     std::string name;
     Game_item back[4];
-    Player(int, int);
+    Player(int, int, bool = false);
     const int max_back = 4;
     const char look = '#';
     bool is_fight = false;
     void stats();
     void attack(Enemy& to_attack, char **map);
+    void take_hit(int demage);
+    void readData(int, int, int, std::string[]);
 };
 

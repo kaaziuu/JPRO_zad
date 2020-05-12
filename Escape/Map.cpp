@@ -36,10 +36,12 @@ char Map::room_wall(int x, int y, bool* used_index) {
 }
 
 
-Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size) {
+Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size, bool generate) {
 	this->width = width;
 	this->height = height;
-	this->room_generator();
+	if (generate) {
+		this->room_generator();
+	}
 	if (this->height < 20) {
 		this->height = 20;
 	}
@@ -51,12 +53,18 @@ Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size) {
 	for (int i = 0; i < this->height; i++) {
 		this->map[i] = new char[this->width];
 	}
-	
-	
-	
+	if (generate) {
+		update(hero, enemy_arr, size);
+	}
 
-	update(hero, enemy_arr, size);
+}
 
+Map::~Map()
+{
+	for (int i = 0; i < this->height; i++) {
+		delete[] this->map[i];
+	}
+	delete[] this->map;
 }
 
 int Map::enemy_draw(Enemy* enemy_arr, int size, int x, int y) {
@@ -176,4 +184,14 @@ void Map::move_player(Player& hero, int direction) {
 	}
 
 }
+
+void Map::loadRoom(int x, int y, int size, int index)
+{
+	this->room[index].x_door_pos = 2;
+	this->room[index].x_start = x;
+	this->room[index].y_start = y;
+	this->room[index].size = size;
+}
+
+
 

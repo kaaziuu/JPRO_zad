@@ -57,4 +57,18 @@
   <ItemGroup>
     <None Include=".gitignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="player.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="enemy.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="map.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="mapData.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

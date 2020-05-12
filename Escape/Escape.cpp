@@ -1,6 +1,9 @@
 ﻿// Escape.cpp : Ten plik zawiera funkcję „main”. W nim rozpoczyna się i kończy wykonywanie programu.
 //
 #include <iostream>
+#include <fstream>
+#include <string>
+
 #include <Windows.h>
 #include <time.h>
 #include "Player.h"
@@ -12,7 +15,10 @@
 #define KEY_RIGHT 77
 
 const int size = 10;
-Enemy enemy_arr[10];
+Enemy enemy_arr[size];
+
+
+
 
 bool is_reapet_enemy(int* x_pos, int* y_pos, int size, int x, int y) {
     for (int i = 0; i < size; i++) {
@@ -23,6 +29,42 @@ bool is_reapet_enemy(int* x_pos, int* y_pos, int size, int x, int y) {
         }
     }
     return false;
+}
+
+void save(Map& map, Player& player, int x, int y) {
+    std::ofstream  player_Data;
+    player_Data.open("player.txt");
+    player_Data << player.x_pos << "\n";
+    player_Data << player.y_pos << "\n";
+    player_Data << player.health << "\n";
+    player_Data << player.power << "\n";
+    player_Data << player.defense << "\n";
+    player_Data.close();
+
+    std::ofstream enemy_data;
+    enemy_data.open("enemy.txt");
+    for (int i = 0; i < size; i++) {
+        enemy_data << enemy_arr[i].x_pos << "\n";
+        enemy_data << enemy_arr[i].y_pos << "\n";
+        enemy_data << enemy_arr[i].health << "\n";
+        enemy_data << enemy_arr[i].power << "\n";
+        enemy_data << enemy_arr[i].defense << "\n";
+    }
+    enemy_data.close();
+    
+    std::ofstream mapData;
+    mapData.open("map.txt");
+    for (int i = 0; i < 4; i++){
+        mapData << map.room[i].x_start << "\n";
+        mapData << map.room[i].y_start << "\n";
+        mapData << map.room[i].size << "\n";
+    }
+
+    mapData.close();
+    mapData.open("mapData.txt");
+    mapData << map.width << "\n";
+    mapData << map.height;
+    mapData.close();
 }
 
 void generate_enemy() {
@@ -42,7 +84,7 @@ void generate_enemy() {
     }
 }
 
-Map level(Player& hero) {
+Map * level(Player& hero) {
     int x_pos[size];
     int y_pos[size];
     
@@ -57,11 +99,12 @@ Map level(Player& hero) {
         enemy_arr[i].init(x, y, i);
     }
 
-    Map map(40, 20, hero, enemy_arr, size);
+    Map * map = new Map(40, 20, hero, enemy_arr, size);
+  
     return map;
 }
 
-void player_movment(Map& map, Player& hero) {
+void player_movment(Map& map, Player& hero, bool *isplay) {
     if (GetAsyncKeyState(VK_UP)) {
         map.move_player(hero, 0);
     }
@@ -78,8 +121,15 @@ void player_movment(Map& map, Player& hero) {
 
     }
 
+    if (GetAsyncKeyState(VK_F1)) {
+        save(map, hero, map.width, map.height);
+        *isplay = false;
+    }
+
 
 }
+
+
 
 void player_fight(Map& map, Player& player, int* onfocus) {
     if (GetAsyncKeyState(VK_TAB)) {
@@ -169,7 +219,7 @@ void main_loop(Player& hero, Map& map) {
         
             delta_time = 0;
             // player movment
-            player_movment(map, hero);
+            player_movment(map, hero, &is_play);
             enemy_logic(map.map, hero);
             map.update(hero, enemy_arr, size);
         }
@@ -190,15 +240,30 @@ void main_loop(Player& hero, Map& map) {
                 player_fight(map, hero, pointer_onfocus);
                 if (hero.current_point == 0) {
                     map.is_player_move = false;
-                    hero.current_point = 3;
+                    hero.current_point = hero.move_point;
                 }
             }
             else {
                 int player_pos[2] = { hero.x_pos, hero.y_pos };
+                int hit_point = 0;
+                bool next_player = false;
+                int point_sum = 0;
                 for (int i = 0; i < size; i++) {
                     if (enemy_arr[i].current_state == attact) {
-                        enemy_arr[i].attact_state(map.map, player_pos);
+                        hit_point += enemy_arr[i].attact_state(map.map, player_pos);
+                        point_sum += (--enemy_arr[i].current_point);
                     }
+                }
+                std::cout << point_sum;
+                hero.take_hit(hit_point);
+                
+                if (point_sum == 0) {
+                    for (int i = 0; i < size; i++) {
+                        if (enemy_arr[i].current_point != enemy_arr[i].move_point) {
+                            enemy_arr[i].current_point = enemy_arr[i].move_point;
+                        }
+                    }
+                    map.is_player_move = true;
                 }
             }
             enemy_logic(map.map, hero);
@@ -209,6 +274,8 @@ void main_loop(Player& hero, Map& map) {
         
 
     }
+
+    
 }
 
 
@@ -217,23 +284,171 @@ int main() {
     int choose;
     bool is_good = false;
     while (!is_good) {
+        system("CLS");
+       
         std::cout << "Witam w grze The Escape" << std::endl;
         std::cout << "1-nowa gra" << std::endl;
         std::cout << "2-wczytaj" << std::endl;
         std::cout << "3-wjscie" << std::endl;
         std::cin >> choose;
-        if (choose == 1 || choose == 2 || choose == 3) {
-            is_good = true;
+
+        if (choose == 1) {
+            system("CLS");
+            Player hero(1, 1);
+            generate_enemy();
+            Map* map = level(hero);
+
+            main_loop(hero, *map);
+            choose = 0;
+            //system("CLS");
+
+        }
+        if (choose == 2) {
+            system("CLS");
+            int player_data[5];
+            std::ifstream playerData("player.txt");
+            std::string data;
+            int ct = 0;
+            int x_pos;
+            int y_pos;
+            int health;
+            int power;
+            int defense;
+            std::string::size_type sz;
+            std::string item[4] = { "", "", "", "" };
+            while (std::getline(playerData, data))
+            {
+                switch (ct)
+                {
+                case 0:
+                    x_pos = std::stoi(data, &sz);
+                    break;
+                case 1:
+                    y_pos = std::stoi(data, &sz);
+                    break;
+                case 2:
+                    health = std::stoi(data, &sz);
+                    break;
+                case 3:
+                    power = std::stoi(data, &sz);
+                    break;
+                case 4:
+                    defense = std::stoi(data, &sz);
+                    break;
+                default:
+                    item[ct - 5] = data;
+                    break;
+                }
+                ct++;
+            }
+            
+            
+            playerData.close();
+            Player hero(x_pos, y_pos, true);
+            hero.readData(health, power, defense, item);
+            //hero.stats();
+
+            std::ifstream enemyData("enemy.txt");
+            int index = 0;
+            ct = 1;
+            while (std::getline(enemyData, data))
+            {
+                int tmp = ct % 5;
+                switch (tmp)
+                {
+                case 1:
+                    x_pos = std::stoi(data, &sz);
+                    break;
+                case 2:
+                    y_pos = std::stoi(data, &sz);
+                    break;
+                case 3:
+                    health = std::stoi(data, &sz);
+                    break;
+                case 4:
+                    power = std::stoi(data, &sz);
+                    break;
+                case 0:
+                    defense = std::stoi(data, &sz);
+                    break;
+                default:
+                    break;
+                }
+                if (tmp == 0) {
+                    enemy_arr[index].init(x_pos, y_pos, index);
+                    enemy_arr[index].health = health;
+                    enemy_arr[index].power = power;
+                    enemy_arr[index].defense = defense;
+                    index++;
+                    
+                }
+                ct++;
+            }
+            enemyData.close();
+
+            std::ifstream mapData("mapData.txt");
+            int mct = 0;
+            int height;
+            int width;
+            while (std::getline(mapData, data))
+            {
+                switch (mct)
+                {
+                case 0:
+                    width = std::stoi(data, &sz);
+                    break;
+                case 1:
+                    height = std::stoi(data, &sz);
+                    break;
+                default:
+                    break;
+                }
+                mct++;
+            }
+            mapData.close();
+            Map map(width, height, hero, enemy_arr, size, false);
+            std::ifstream roomData("map.txt");
+            int mdct = 1;
+            index = 0;
+            int x;
+            int y;
+            int s;
+            while (std::getline(roomData, data))
+            {
+                int tmp = mdct % 3;
+                switch (tmp)
+                {
+                case 1:
+                    x = std::stoi(data, &sz);
+                    break;
+                case 2:
+                    y = std::stoi(data, &sz);
+                    break;
+                case 0:
+                    s = std::stoi(data, &sz);
+                    break;
+                default:
+                    break;
+                }
+                if (tmp == 0) {
+                    map.loadRoom(x, y, s, index);
+                    index++;
+                }
+                mdct++;
+
+            }
+            mapData.close();
+            map.update(hero, enemy_arr, size);
+            main_loop(hero, map);
+            choose = 0;
+
+        }
+        if (choose == 3) {
+            std::cout << "zegnaj";
+            break;
         }
     }
-    if (choose == 1) {
-        system("CLS");
-        Player hero(1,1);
-        generate_enemy();
-        Map map =  level(hero);
 
-        main_loop(hero, map);
-    }
     return 0;
 }
 

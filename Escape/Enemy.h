@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-
 enum state
 {
 	patrol,
@@ -23,9 +22,8 @@ public:
 	state current_state = patrol;
 	bool update(char **map, int player_pos[]);
 	void patrol_state(char **map);
-	void attact_state(char **map, int player_pos[2]);
+	int attact_state(char **map, int player_pos[2]);
 
 protected:
 	int range_see = 4;
-	int move_point;
 };

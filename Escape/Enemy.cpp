@@ -8,17 +8,18 @@ void Enemy::init(int x, int y, int id) {
 	this->health = 5;
 	this->power = 2;
 	this->defense = 1;
+	
 }
 
 // patrol state
-void Enemy::patrol_state(char **map) {
+void Enemy::patrol_state(char** map) {
 	int direct = rand() % 4;
 	int start_direct = direct;
 	//random movment of enemy, enemy alway will be move if one og direct is bloced enemy will be to other
 	do
 	{
 		if (direct == 0) {
-			char target = map[this->y_pos-1][this->x_pos];
+			char target = map[this->y_pos - 1][this->x_pos];
 			if (target == ' ' || target == 'd') {
 				this->y_pos--;
 				break;
@@ -32,14 +33,14 @@ void Enemy::patrol_state(char **map) {
 			}
 		}
 		else if (direct == 2) {
-			char target = map[this->y_pos][this->x_pos+1];
+			char target = map[this->y_pos][this->x_pos + 1];
 			if (target == ' ' || target == 'd') {
 				this->x_pos++;
 				break;
 			}
 		}
 		else if (direct == 3) {
-			char target = map[this->y_pos][this->x_pos-1];
+			char target = map[this->y_pos][this->x_pos - 1];
 			if (target == ' ' || target == 'd') {
 				this->x_pos--;
 				break;
@@ -60,8 +61,33 @@ void Enemy::patrol_state(char **map) {
 }
 
 // attact state TODO
-void Enemy::attact_state(char **map, int player_pos[2]) {
-	std::cout << "enemy attact mode";
+int Enemy::attact_state(char** map, int player_pos[2]) {
+	if (this->current_point > 0) {
+		if (this->x_pos == player_pos[0] && (abs(player_pos[1] - this->y_pos) == 1)) {
+			return this->power;
+		}
+		else if (this->y_pos == player_pos[1] && (abs(player_pos[0] - this->x_pos) == 1)) {
+			return this->power;
+		}
+		else {
+			if (this->y_pos > player_pos[1] && map[this->y_pos - 1][this->x_pos] == ' ') {
+				this->y_pos--;
+			}
+			else if (this->y_pos < player_pos[1] && map[this->y_pos + 1][this->x_pos] == ' ') {
+				this->y_pos++;
+			}
+			else if (this->x_pos > player_pos[0] && map[this->y_pos][this->x_pos + 1] == ' ') {
+				this->x_pos--;
+			}
+			else if (this->x_pos < player_pos[0] && map[this->y_pos ][this->x_pos - 1] == ' ') {
+				this->x_pos++;
+			}
+		}
+		
+	}
+	
+	
+	return 0;
 }
 
 bool Enemy::update(char **map, int player_pos[]) {
@@ -93,7 +119,7 @@ bool Enemy::update(char **map, int player_pos[]) {
 				else { y++; }
 			}
 		}
-		int tmp = 2;
+//		int tmp = 2;
 	}
 
 	if (distanse <= this->range_see && this->current_state==patrol && !is_wall) {

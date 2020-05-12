@@ -165,6 +165,12 @@
   <ItemGroup>
     <None Include=".gitignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="enemy.txt" />
+    <Text Include="map.txt" />
+    <Text Include="mapData.txt" />
+    <Text Include="player.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
