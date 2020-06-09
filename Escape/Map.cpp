@@ -54,6 +54,9 @@ Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size, bool g
 		this->map[i] = new char[this->width];
 	}
 	if (generate) {
+		for (int i = 0; i < this->ct_item; i++) {
+			this->groundItem[i].init(" tarcza", 10, 10, false, i, 2);
+		}
 		update(hero, enemy_arr, size);
 	}
 
@@ -61,6 +64,7 @@ Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size, bool g
 
 Map::~Map()
 {
+	delete[] this->groundItem;
 	for (int i = 0; i < this->height; i++) {
 		delete[] this->map[i];
 	}
@@ -86,6 +90,13 @@ void Map::update(Player& hero, Enemy* enemy_arr, int size) {
 		for (int j = 0; j < this->width; j++) {
 			char ch = room_wall(j, i, used_index);
 			int index = enemy_draw(enemy_arr, size, j, i);
+			for (int k = 0; k <this->ct_item; k++) {
+				if (i == this->groundItem[i].pos_y && j == this->groundItem[i].pos_x && this->groundItem[i].isactive) {
+					ch = this->groundItem[i].look;
+					break;
+				}
+			}
+
 		
 			if (ch == 'd') {
 				this->map[i][j] = 'd';
@@ -191,6 +202,26 @@ void Map::loadRoom(int x, int y, int size, int index)
 	this->room[index].x_start = x;
 	this->room[index].y_start = y;
 	this->room[index].size = size;
+}
+
+GroundItem* Map::ItemAround(Player& hero)
+{
+	for (int y = -1; y <= 1; y++) {
+		for (int x = -1; x <= 1; x++) {
+			for (int i = 0; i < this->ct_item; i++) {
+				if (abs(x) == abs(y)) {
+					continue;
+				}
+				if (hero.x_pos + x == this->groundItem[i].pos_x && hero.y_pos + y == this->groundItem[i].pos_y && this->groundItem[i].isactive) {
+					this->groundItem[i].look = ' ';
+					this->groundItem[i].isactive = false;
+					return &this->groundItem[i];
+				}
+			}
+		}
+	}
+
+	return NULL;
 }
 
 

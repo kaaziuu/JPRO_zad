@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Room.h"
+#include "GroundItem.h"
 class Map
 {
 public:
@@ -18,8 +19,11 @@ public:
 	bool is_player_move = true;
 	int width;
 	int height;
+	int ct_item = 4;
 	void loadRoom(int x, int y, int size, int index);
 	Room room[4];
+	GroundItem groundItem[4];
+	GroundItem* ItemAround(Player& hero);
 
 
 private:

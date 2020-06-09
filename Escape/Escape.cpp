@@ -8,7 +8,7 @@
 #include <time.h>
 #include "Player.h"
 #include "map.h"
-
+#include "Game_item.h"
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_LEFT 75
@@ -121,10 +121,18 @@ void player_movment(Map& map, Player& hero, bool *isplay) {
 
     }
 
-    if (GetAsyncKeyState(VK_F1)) {
+    if (GetAsyncKeyState(VK_DELETE)) {
         save(map, hero, map.width, map.height);
         *isplay = false;
     }
+    if (GetAsyncKeyState(VK_F1)) {
+        GroundItem* pick_up_item = map.ItemAround(hero);
+        if (pick_up_item) {
+            Game_item* item = new Game_item(pick_up_item->name, pick_up_item->attack, pick_up_item->defense, pick_up_item->is_protect);
+            hero.pickup(*item, 0);
+        }
+    }
+    
 
 
 }
@@ -166,7 +174,7 @@ void player_fight(Map& map, Player& player, int* onfocus) {
     else if (GetAsyncKeyState(VK_RIGHT)) {
         map.move_player(player, 2);
         player.current_point--;
-
+        
     }
     else if (GetAsyncKeyState(VK_LEFT)) {
         map.move_player(player, 3);
@@ -192,6 +200,16 @@ void enemy_logic(char** map, Player& hero) {
     hero.is_fight = to_fight;
 }
 
+int aggressive_enemy(char** map, int player_pos[2], Enemy& enemy) {
+    return enemy.aggressive(map, player_pos);
+}
+int tactisc_enemy(char** map, int player_pos[2], Enemy& enemy) {
+    return enemy.tatician(map, player_pos);
+}
+int scary_enemy(char** map, int player_pos[2], Enemy& enemy) {
+    return enemy.scary(map, player_pos);
+}
+
 
 // main loop
 void main_loop(Player& hero, Map& map) {
@@ -203,6 +221,9 @@ void main_loop(Player& hero, Map& map) {
     pointer_onfocus = &onfocus;
     time_t old_time= 0;
     time_t current_time = 0;
+       
+    int(*enemy_attack_point[])(char**, int[2], Enemy&) = {aggressive_enemy, tactisc_enemy, scary_enemy};
+
     while (is_play)
     {
         old_time = current_time;
@@ -250,7 +271,7 @@ void main_loop(Player& hero, Map& map) {
                 int point_sum = 0;
                 for (int i = 0; i < size; i++) {
                     if (enemy_arr[i].current_state == attact) {
-                        hit_point += enemy_arr[i].attact_state(map.map, player_pos);
+                        hit_point -= (*enemy_attack_point[enemy_arr[i].behavior])(map.map, player_pos, enemy_arr[i]);
                         point_sum += (--enemy_arr[i].current_point);
                     }
                 }

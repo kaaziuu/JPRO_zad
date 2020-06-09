@@ -22,8 +22,11 @@ public:
 	state current_state = patrol;
 	bool update(char **map, int player_pos[]);
 	void patrol_state(char **map);
-	int attact_state(char **map, int player_pos[2]);
-
+	int behavior;
+	int scary(char** map, int player_pos[2]);
+	int aggressive(char** map, int player_pos[2]);
+	int tatician(char** map, int player_pos[2]);
 protected:
 	int range_see = 4;
+	void close_compan(int*, char**);
 };

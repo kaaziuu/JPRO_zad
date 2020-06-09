@@ -2,6 +2,11 @@
 Player::Player(int x, int y, bool reload) {
     this->x_pos = x;
     this->y_pos = y;
+    this->back = (Game_item*)malloc(this->backsize * sizeof(Game_item));
+
+    for (int i = 0; i < this->backsize; i++) {
+        new((void*)&back[i]) Game_item("brak", 0, 0, false);
+    }
     if (!reload) {
         std::cout << "# <- to twoj bohater" << std::endl;
         std::cout << "Czas zrobic swojego gracza, Najpierw nadaj mu imie: ";
@@ -38,13 +43,20 @@ Player::Player(int x, int y, bool reload) {
 
 }
 
+Player::~Player() {
+    for (int i = 0; i< 4; i++) {
+        this->back[i].~Game_item();
+    }
+    free(this->back);
+}
+
 void Player::stats() {
 
     std::cout << "\t\t\tzdrowi: " << this->health << std::endl;
     std::cout << "\t\t\tsila: " << this->power << std::endl;
     std::cout << "\t\t\tobrona: " << this->defense << std::endl;
     std::cout << "\t\t\tmove_point: " << this->current_point << std::endl;
-    for (int i=0; i < this->max_back; i++) {
+    for (int i=0; i < this->backsize; i++) {
         if (this->back[i].name != "") {
             std::cout << "\t\t\tslot " << (i + 1) << this->back[i].name << std::endl;
         }
@@ -78,6 +90,9 @@ void Player::attack(Enemy& to_attack, char **Map) {
 void Player::take_hit(int demage)
 {
     demage -= this->defense;
+    if (demage <= 0) {
+        demage = 1;
+    }
     this->health -= demage;
 }
 
@@ -88,5 +103,9 @@ void Player::readData(int health, int power, int defense, std::string[])
     this->defense = defense;
 }
 
-
+void Player::pickup(Game_item& new_item, int slot) {
+    this->back[slot] = new_item;
+    this->power += new_item.attack;
+    this->defense += new_item.defense;
+}
 

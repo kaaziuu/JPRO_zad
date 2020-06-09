@@ -1,1 +1,4 @@
-﻿  Escape.vcxproj -> C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Debug\Escape.exe
+﻿  Player.cpp
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Player.cpp(105,35): warning C4244: "+=": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Player.cpp(106,38): warning C4244: "+=": konwersja z "float" do "int", możliwa utrata danych
+  Escape.vcxproj -> C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Debug\Escape.exe
