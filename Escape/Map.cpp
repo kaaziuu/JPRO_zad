@@ -55,7 +55,7 @@ Map::Map(int width, int height, Player& hero, Enemy* enemy_arr, int size, bool g
 	}
 	if (generate) {
 		for (int i = 0; i < this->ct_item; i++) {
-			this->groundItem[i].init(" tarcza", 10, 10, false, i, 2);
+			this->groundItem[i].init(" tarcza", 10, 10, false, (3*i)+2, 3*i+2);
 		}
 		update(hero, enemy_arr, size);
 	}
@@ -91,13 +91,15 @@ void Map::update(Player& hero, Enemy* enemy_arr, int size) {
 			char ch = room_wall(j, i, used_index);
 			int index = enemy_draw(enemy_arr, size, j, i);
 			for (int k = 0; k <this->ct_item; k++) {
-				if (i == this->groundItem[i].pos_y && j == this->groundItem[i].pos_x && this->groundItem[i].isactive) {
+				if (i == this->groundItem[k].pos_y && j == this->groundItem[k].pos_x && this->groundItem[k].isactive) {
+					this->map[i][j] = this->groundItem[i].look;
 					ch = this->groundItem[i].look;
 					break;
 				}
 			}
-
-		
+			if (ch == 'I') {
+				continue;
+			}
 			if (ch == 'd') {
 				this->map[i][j] = 'd';
 				if (index != -1) {

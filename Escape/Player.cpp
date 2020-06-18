@@ -2,11 +2,11 @@
 Player::Player(int x, int y, bool reload) {
     this->x_pos = x;
     this->y_pos = y;
-    this->back = (Game_item*)malloc(this->backsize * sizeof(Game_item));
-
-    for (int i = 0; i < this->backsize; i++) {
-        new((void*)&back[i]) Game_item("brak", 0, 0, false);
-    }
+    //this->back = (Game_item*)malloc(this->backsize * sizeof(Game_item));
+    this->back = new Game_item[this->backsize];
+//    for (int i = 0; i < this->backsize; i++) {
+  //      new((void*)&back[i]) Game_item("brak", 0, 0, false);
+   // }
     if (!reload) {
         std::cout << "# <- to twoj bohater" << std::endl;
         std::cout << "Czas zrobic swojego gracza, Najpierw nadaj mu imie: ";
@@ -47,7 +47,7 @@ Player::~Player() {
     for (int i = 0; i< 4; i++) {
         this->back[i].~Game_item();
     }
-    free(this->back);
+    delete[] this->back;
 }
 
 void Player::stats() {
@@ -67,7 +67,7 @@ void Player::stats() {
 }
 
 
-void Player::attack(Enemy& to_attack, char **Map) {
+int Player::attack(Enemy& to_attack, char **Map) {
     int x_enemy = to_attack.x_pos;
     int y_enemy = to_attack.y_pos;
     bool can_attack = false;
@@ -79,10 +79,13 @@ void Player::attack(Enemy& to_attack, char **Map) {
         to_attack.health -= demage;
         this->current_point--;
         if (to_attack.health <= 0) {
-            to_attack.current_state = dead;
-            to_attack.look = 'm';
+ //           to_attack.current_state = dead;
+ //           to_attack.look = 'm';
+            Map[to_attack.y_pos][to_attack.x_pos] = 'm';
+            return to_attack.id;
         }
     }
+    return -1;
 
     
 }

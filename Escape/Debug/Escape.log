@@ -1,4 +1,18 @@
-﻿  Player.cpp
-C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Player.cpp(105,35): warning C4244: "+=": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Player.cpp(106,38): warning C4244: "+=": konwersja z "float" do "int", możliwa utrata danych
+﻿  Escape.cpp
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\map.h(1,9): warning C4068: nieznana pragma
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(141,99): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(141,77): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(148,99): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(148,77): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(155,99): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(155,77): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(162,99): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(162,77): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(261,27): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(364,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Escape.cpp(389,17): warning C4101: "player_data": lokalna zmienna, do której nie istnieje odwołanie
+  Player.cpp
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Player.cpp(108,35): warning C4244: "+=": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Escape\Player.cpp(109,38): warning C4244: "+=": konwersja z "float" do "int", możliwa utrata danych
+  Generowanie kodu...
   Escape.vcxproj -> C:\Users\keyroll\Desktop\my_program\jpro\escape\Escape\Debug\Escape.exe

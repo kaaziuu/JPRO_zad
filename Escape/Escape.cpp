@@ -14,8 +14,8 @@
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 
-const int size = 10;
-Enemy enemy_arr[size];
+int size = 10;
+Enemy* enemy_arr = new Enemy[size];
 
 
 
@@ -41,6 +41,15 @@ void save(Map& map, Player& player, int x, int y) {
     player_Data << player.defense << "\n";
     player_Data.close();
 
+    std::ofstream ItemData;
+    ItemData.open("item.txt");
+    for (int i = 0; i < player.backsize; i++) {
+        ItemData << player.back[i].name << "\n";
+        ItemData << player.back[i].attack << "\n";
+        ItemData << player.back[i].defense << "\n";
+        ItemData << player.back[i].is_protect << "\n";
+    }
+
     std::ofstream enemy_data;
     enemy_data.open("enemy.txt");
     for (int i = 0; i < size; i++) {
@@ -65,9 +74,10 @@ void save(Map& map, Player& player, int x, int y) {
     mapData << map.width << "\n";
     mapData << map.height;
     mapData.close();
+
 }
 
-void generate_enemy() {
+/**void generate_enemy() {
     Enemy enemy_arr[size];
     int x_pos[size];
     int y_pos[size];
@@ -82,11 +92,11 @@ void generate_enemy() {
         }
         enemy_arr[i].init(x, y, i);
     }
-}
+}**/
 
 Map * level(Player& hero) {
-    int x_pos[size];
-    int y_pos[size];
+    int* x_pos = (int*)malloc(sizeof(int) * size);
+    int* y_pos = (int*)malloc(sizeof(int) * size);
     
     // enemy postion genarton
     for (int i = 0; i < size; i++) {
@@ -100,7 +110,8 @@ Map * level(Player& hero) {
     }
 
     Map * map = new Map(40, 20, hero, enemy_arr, size);
-  
+    free(x_pos);
+    free(y_pos);
     return map;
 }
 
@@ -132,6 +143,27 @@ void player_movment(Map& map, Player& hero, bool *isplay) {
             hero.pickup(*item, 0);
         }
     }
+    if (GetAsyncKeyState(VK_F2)) {
+        GroundItem* pick_up_item = map.ItemAround(hero);
+        if (pick_up_item) {
+            Game_item* item = new Game_item(pick_up_item->name, pick_up_item->attack, pick_up_item->defense, pick_up_item->is_protect);
+            hero.pickup(*item, 1);
+        }
+    }
+    if (GetAsyncKeyState(VK_F3)) {
+        GroundItem* pick_up_item = map.ItemAround(hero);
+        if (pick_up_item) {
+            Game_item* item = new Game_item(pick_up_item->name, pick_up_item->attack, pick_up_item->defense, pick_up_item->is_protect);
+            hero.pickup(*item, 2);
+        }
+    }
+    if (GetAsyncKeyState(VK_F4)) {
+        GroundItem* pick_up_item = map.ItemAround(hero);
+        if (pick_up_item) {
+            Game_item* item = new Game_item(pick_up_item->name, pick_up_item->attack, pick_up_item->defense, pick_up_item->is_protect);
+            hero.pickup(*item, 3);
+        }
+    }
     
 
 
@@ -161,7 +193,11 @@ void player_fight(Map& map, Player& player, int* onfocus) {
         }
     }
     if (GetAsyncKeyState(VK_LCONTROL)) {
-        player.attack(enemy_arr[*onfocus], map.map);
+        int index = player.attack(enemy_arr[*onfocus], map.map);
+        if (index != -1) {
+            size--;
+
+        }
     }
     else if (GetAsyncKeyState(VK_UP)) {
         map.move_player(player, 0);
@@ -181,6 +217,19 @@ void player_fight(Map& map, Player& player, int* onfocus) {
         player.current_point--;
 
     }
+}
+
+bool win_check() {
+    int ct = 0;
+    for (int i = 0; i < size; i++) {
+        if (enemy_arr[i].current_state == dead || enemy_arr[i].is_hidden) {
+            ct++;
+       }
+    }
+    if (ct == size) {
+        return true;
+    }
+    return false;
 }
 
 void enemy_logic(char** map, Player& hero) {
@@ -221,11 +270,18 @@ void main_loop(Player& hero, Map& map) {
     pointer_onfocus = &onfocus;
     time_t old_time= 0;
     time_t current_time = 0;
-       
+    bool is_win = false;
     int(*enemy_attack_point[])(char**, int[2], Enemy&) = {aggressive_enemy, tactisc_enemy, scary_enemy};
 
     while (is_play)
     {
+        if (win_check()) {
+            is_win = true;
+            break;
+        }
+        if (hero.health <= 0) {
+            break;
+        }
         old_time = current_time;
         current_time = time(NULL);
         delta_time += current_time - old_time;
@@ -295,6 +351,15 @@ void main_loop(Player& hero, Map& map) {
         
 
     }
+    if (is_win) {
+        std::cout << "gratulacje udalo ci sie wszytkich pokonac" << std::endl;
+    }
+    else {
+        std::cout << "niestety tym razem ci się nie udało" << std::endl;
+    }
+    std::cout << "wpisz jakis przycisk aby wrocic do menu" << std::endl;
+    std::string tt;
+    std::cin >> tt;
 
     
 }
@@ -466,6 +531,7 @@ int main() {
         }
         if (choose == 3) {
             std::cout << "zegnaj";
+            delete[] enemy_arr;
             break;
         }
     }

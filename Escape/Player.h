@@ -16,7 +16,7 @@ public:
     const char look = '#';
     bool is_fight = false;
     void stats();
-    void attack(Enemy& to_attack, char **map);
+    int attack(Enemy& to_attack, char **map);
     void take_hit(int demage);
     void readData(int, int, int, std::string[]);
     void pickup(Game_item& new_item, int slot);
