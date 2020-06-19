@@ -14,8 +14,8 @@
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 
-int size = 10;
-Enemy* enemy_arr = new Enemy[size];
+const int size = 10;
+Enemy enemy_arr[size];
 
 
 
@@ -77,7 +77,7 @@ void save(Map& map, Player& player, int x, int y) {
 
 }
 
-/**void generate_enemy() {
+void generate_enemy() {
     Enemy enemy_arr[size];
     int x_pos[size];
     int y_pos[size];
@@ -92,7 +92,7 @@ void save(Map& map, Player& player, int x, int y) {
         }
         enemy_arr[i].init(x, y, i);
     }
-}**/
+}
 
 Map * level(Player& hero) {
     int* x_pos = (int*)malloc(sizeof(int) * size);
@@ -194,10 +194,6 @@ void player_fight(Map& map, Player& player, int* onfocus) {
     }
     if (GetAsyncKeyState(VK_LCONTROL)) {
         int index = player.attack(enemy_arr[*onfocus], map.map);
-        if (index != -1) {
-            size--;
-
-        }
     }
     else if (GetAsyncKeyState(VK_UP)) {
         map.move_player(player, 0);
